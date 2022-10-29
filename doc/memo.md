@@ -1,0 +1,3 @@
+
+cd APISample
+mvn package

@@ -3,6 +3,7 @@ version: '3'
 services:
   tomcat:
     image: tomcat:9.0.13-jre11-slim
+    user: "${UID_GID}"
     volumes:
       - ./webapps:/usr/local/tomcat/webapps
     ports:
@@ -15,6 +16,7 @@ services:
       dockerfile: Dockerfile
     platform: linux/x86_64
     tty: true
+    user: "${UID_GID}"
     ports:
       - 3306:3306
     environment:
@@ -24,3 +26,16 @@ services:
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
+
+  java:
+    container_name: java
+    image: maven:3.8.6-openjdk-18
+    platform: linux/x86_64
+    user: "${UID_GID}"
+    tty: true
+    command: "/bin/bash"
+    volumes:
+      - ./:/app
+    working_dir: /app/src
+    environment:
+      - "MAVEN_OPTS=-Dmaven.repo.local=/app/.m2"
