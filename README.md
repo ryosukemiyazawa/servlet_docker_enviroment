@@ -24,14 +24,14 @@ $ docker compose exec java /bin/bash
 
 ```
 $ mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp
-Define value for property 'groupId': brain
+Define value for property 'groupId': test
 Define value for property 'artifactId': APISample
 Define value for property 'version' 1.0-SNAPSHOT: : (何も入れずにENTER)
-Define value for property 'package' brain: :  (何も入れずにENTER)
+Define value for property 'package' test: :  (何も入れずにENTER)
 Confirm properties configuration:
-groupId: brain
+groupId: test
 artifactId: APISample
 version: 1.0-SNAPSHOT
-package: brain
+package: test
  Y: : Y
 ```
