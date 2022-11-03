@@ -7,7 +7,7 @@ Docker Java開発環境
 $ docker-compose up
 ```
 
-http://localhost:8080/helloworld/
+http://localhost:8888/helloworld/
 
 を開いて表示を確認する
 

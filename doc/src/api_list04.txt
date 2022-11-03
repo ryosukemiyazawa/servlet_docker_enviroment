@@ -1,0 +1,110 @@
+package api;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
+
+//JSON関連
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+//MySQL関連
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+@WebServlet("/")
+public class api_list extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		//DBに接続して取得する
+		Connection conn = null;
+        PreparedStatement stmt = null;
+		List<CustomerInfoBean> customers = new ArrayList<>();
+
+		try {
+			
+            // データベース接続
+            conn = DriverManager.getConnection(
+                    // ホスト名、データベース名
+                    "jdbc:mysql://mysql:3306/study",
+                    // ユーザー名
+                    "system",
+                    // パスワード
+                    "system");
+ 
+            // SQL文をセット
+            stmt = conn.prepareStatement("select * from customer_info order by id desc limit 10");
+			
+			ResultSet rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				CustomerInfoBean customer = new CustomerInfoBean();
+
+				customer.id = rs.getInt("id");
+				customer.name = rs.getString("name");
+				customer.birthday = rs.getString("birthday");
+				customer.gender = rs.getString("gender");
+				customer.blood = rs.getString("blood");
+				customer.mailaddress = rs.getString("mailaddress");
+				customer.tel = rs.getString("tel");
+				customer.mobile = rs.getString("mobile");
+				customer.post = rs.getString("post");
+				customer.address = rs.getString("address");
+				customer.company = rs.getString("company");
+				customer.card = rs.getString("card");
+				customer.myno = rs.getString("myno");
+
+				customers.add(customer);
+			}
+
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("データベース接続エラー。");
+            }
+        }
+
+
+
+
+		//APIの返却値のオブジェクトを作る
+		APIResponseBean bean = new APIResponseBean();
+		bean.result = 1;
+		bean.customers = customers;
+		
+
+		//JSONに変換する
+		String jsonString = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+            //JavaオブジェクトからJSONに変換
+            jsonString = mapper.writeValueAsString(bean);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().write(jsonString);
+
+	}
+}

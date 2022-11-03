@@ -1,3 +1,5 @@
 .env
 src/*
 .m2
+.vscode
+build

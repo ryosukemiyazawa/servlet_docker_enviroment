@@ -1,0 +1,14 @@
+package api;
+
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class APIResponseBean {
+	
+	@JsonProperty("result")
+	public int result;
+
+	@JsonProperty("customers")
+    private List<CustomerInfoBean> customers;
+	
+}

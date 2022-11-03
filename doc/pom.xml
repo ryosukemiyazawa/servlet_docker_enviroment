@@ -1,0 +1,11 @@
+<project>
+<modelVersion>4.0.0</modelVersion>
+<groupId>id</groupId>
+<artifactId>dl</artifactId>
+<version>1</version>
+
+<dependencies>
+<!-- Mavenリポジトリからダウンロードしたいライブラリをここにコピペ -->
+
+</dependencies>
+</project>

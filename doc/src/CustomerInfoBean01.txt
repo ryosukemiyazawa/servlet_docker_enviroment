@@ -1,0 +1,42 @@
+package api;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class CustomerInfoBean {
+	
+	@JsonProperty("name")
+	public String name;
+	
+	@JsonProperty("birthday")
+	public String birthday;
+	
+	@JsonProperty("gender")
+	public String gender;
+	
+	@JsonProperty("blood")
+	public String blood;
+	
+	@JsonProperty("mailaddress")
+	public String mailaddress;
+	
+	@JsonProperty("tel")
+	public String tel;
+	
+	@JsonProperty("mobile")
+	public String mobile;
+	
+	@JsonProperty("post")
+	public String post;
+	
+	@JsonProperty("address")
+	public String address;
+	
+	@JsonProperty("company")
+	public String company;
+	
+	@JsonProperty("card")
+	public String card;
+	
+	@JsonProperty("myno")
+	public String myno;
+
+}

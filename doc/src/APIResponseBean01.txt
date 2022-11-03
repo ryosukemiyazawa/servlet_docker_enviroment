@@ -1,0 +1,9 @@
+package api;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class APIResponseBean {
+	
+	@JsonProperty("result")
+	public int result;
+	
+}

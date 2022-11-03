@@ -1,0 +1,37 @@
+package api;
+import java.io.*;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.WebServlet;
+
+//JSON関連
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@WebServlet("/")
+public class api_list extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		//APIの返却値のオブジェクトを作る
+		APIResponseBean bean = new APIResponseBean();
+		bean.result = 1;
+		
+
+		//JSONに変換する
+		String jsonString = "";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+            //JavaオブジェクトからJSONに変換
+            jsonString = mapper.writeValueAsString(bean);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
+		response.setContentType("application/json; charset=UTF-8");
+		response.getWriter().write(jsonString);
+
+	}
+}

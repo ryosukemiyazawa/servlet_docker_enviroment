@@ -2,12 +2,19 @@ version: '3'
 
 services:
   tomcat:
-    image: tomcat:9.0.13-jre11-slim
-    user: "${UID_GID}"
+    build:
+      context: ./tomcat
+      dockerfile: Dockerfile
+    # user: "${UID_GID}"
     volumes:
+      - ./:/app
       - ./webapps:/usr/local/tomcat/webapps
     ports:
-      - 8080:8080
+      - 8888:8080
+    environment:
+      - "MAVEN_OPTS=-Dmaven.repo.local=/app/.m2"
+    networks:
+      - br0
 
   mysql:
     container_name: mysql
@@ -20,22 +27,28 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_DATABASE=study
-      - MYSQL_USER=system
-      - MYSQL_ROOT_PASSWORD=system
+      MYSQL_DATABASE: "study"
+      MYSQL_USER: "system"
+      MYSQL_PASSWORD: "system"
+      MYSQL_ROOT_PASSWORD: "system"
+      MYSQL_ROOT_HOST: '%'
     volumes:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - br0
+  # java:
+  #   container_name: java
+  #   image: maven:3.8.6-openjdk-18
+  #   user: "${UID_GID}"
+  #   tty: true
+  #   command: "/bin/bash"
+  #   volumes:
+  #     - ./:/app
+  #   working_dir: /app/src
+  #   environment:
+  #     - "MAVEN_OPTS=-Dmaven.repo.local=/app/.m2"
 
-  java:
-    container_name: java
-    image: maven:3.8.6-openjdk-18
-    platform: linux/x86_64
-    user: "${UID_GID}"
-    tty: true
-    command: "/bin/bash"
-    volumes:
-      - ./:/app
-    working_dir: /app/src
-    environment:
-      - "MAVEN_OPTS=-Dmaven.repo.local=/app/.m2"
+networks:
+  br0:
+    driver: bridge
