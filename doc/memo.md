@@ -13,7 +13,7 @@ $ docker compose exec tomcat /bin/bash
 
 ### hello.javaを作成する
 
-- doc/src/hello.java.txtをsrc/hello.javaに設置
+- hello.java.txtをsrc/hello.javaに設置
 
 ```
 public class hello {
@@ -50,7 +50,7 @@ Hello, world.
 
 ### hello_servlet.javaの作成
 
-- doc/src/hello_servlet.java.txtをsrc/hello_servlet.javaに設置
+- hello_servlet.java.txtをsrc/hello_servlet.javaに設置
 
 ```
 import java.io.*;
@@ -130,7 +130,7 @@ $ ls ./target/dependency
 
 ### 確認のためのdbtest.javaを作成する
 
-- doc/src/dbtest.java.txtをsrc/dbtest.javaに設置
+- dbtest.java.txtをsrc/dbtest.javaに設置
 
 ```
 import java.sql.Connection;
@@ -169,7 +169,7 @@ $ java -classpath "./bin:./target/dependency/mysql-connector-j-8.0.31.jar" dbtes
 
 ### 確認のためのdbtest.javaを作成する
 
-- doc/src/insert_db.java.txtをsrc/insert_db.javaに設置
+- insert_db.java.txtをsrc/insert_db.javaに設置
 - insert_dbはJSONの読み込みが必要
 
 必要なjarが増えて大変
@@ -205,7 +205,7 @@ VSCodeを使ってJavaのビルドが出来るようにする
 
 ## シンプルなJSONを返却するServlet
 
-- src/api_list01.txtをsrc/api_list.javaに配置
+- api_list01.txtをsrc/api_list.javaに配置
 
 ```
 export CLASSPATH=.:./bin/./target/dependency/*:/usr/local/tomcat/lib/*
