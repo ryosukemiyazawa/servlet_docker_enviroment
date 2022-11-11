@@ -181,7 +181,7 @@ $ java -classpath "./bin:./target/dependency/mysql-connector-j-8.0.31.jar" dbtes
 
 ```
 # 環境変数の設定
-export CLASSPATH=.:./bin/./target/dependency/*
+export CLASSPATH=.:./bin:./target/dependency/*
 
 # コンパイル
 javac -d bin insert_db.java
@@ -208,7 +208,7 @@ VSCodeを使ってJavaのビルドが出来るようにする
 - api_list01.txtをsrc/api_list.javaに配置
 
 ```
-export CLASSPATH=.:./bin/./target/dependency/*:/usr/local/tomcat/lib/*
+export CLASSPATH=.:./bin:./target/dependency/*:/usr/local/tomcat/lib/*
 $ javac -d bin api/api_list.java
 => src/bin/api/api_list.classを確認
 
@@ -229,7 +229,7 @@ http://127.0.0.1:8888/api_test/
 $ rm -rf /app/webapps/api_test
 => 少し待機
 
-$ export CLASSPATH=.:./bin/./target/dependency/*:/usr/local/tomcat/lib/*
+$ export CLASSPATH=.:./bin:./target/dependency/*:/usr/local/tomcat/lib/*
 $ javac -d bin api/*
 $ mkdir -p bin/api_test/WEB-INF/classes
 $ mkdir -p bin/api_test/WEB-INF/lib
