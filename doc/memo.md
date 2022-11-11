@@ -259,11 +259,11 @@ http://127.0.0.1:8888/api_test/
 
 ### 作業が難しくなってきたので、シェルスクリプトにまとめる
 
-- deploy_test_api.txt => src/deploy_test_api.sh
+- deploy_test_api.txt => src/deploy_api.sh
 
 ```
-$ chmod +x deploy_test_api.sh
-$ ./deploy_test_api.sh
+$ chmod +x deploy_api.sh
+$ ./deploy_api.sh
 ```
 
 ### 顧客情報を渡すようにする
@@ -273,7 +273,7 @@ $ ./deploy_test_api.sh
 - CustomerInfoBean01.txt
 
 ```
-$ ./deploy_test_api.sh
+$ ./deploy_api.sh
 ```
 
 ### DBから取得するようにする
@@ -284,7 +284,7 @@ http://127.0.0.1:8888/api_test/
 を開いて確認する
 
 ```
-$ ./deploy_test_api.sh
+$ ./deploy_api.sh
 ```
 
 ### NextJSからアクセスする
