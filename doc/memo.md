@@ -4,17 +4,107 @@
 $ docker compose exec tomcat /bin/bash
 ```
 
-### hello.javaを作る
+## Javaの開発
 
-javac -classpath /usr/local/tomcat/lib/servlet-api.jar hello.java
-=> hello.class
+1. hello.javaを作成する
+2. hello.javaをコンパイル
+3. 実行
 
-下記に配置
-webapps/xxxx/WEB-INF/classes/hello.class
 
-http://localhost:8888/xxxx/ の表示を確認
+### hello.javaを作成する
 
-### ライブラリのダウンロード
+- doc/src/hello.java.txtをsrc/hello.javaに設置
+
+```
+public class hello {
+
+	public static void main(String[] args) {
+		System.out.println("Hello, world.");
+	}
+
+}
+```
+
+### コンパイル
+
+```
+$ javac hello.java
+$ ll hello.class
+```
+
+=> hello.javaからhello.classが作成されます
+
+
+### 実行
+
+```
+$ java hello
+Hello, world.
+```
+
+## Servletの開発
+
+1. hello_servlet.javaを作成する
+2. hello_servlet.javaをコンパイル
+3. Tomcatに配置する
+
+### hello_servlet.javaの作成
+
+- doc/src/hello_servlet.java.txtをsrc/hello_servlet.javaに設置
+
+```
+import java.io.*;
+import jakarta.servlet.*; // tomcat10以降、javax.servletではなくjakarta.servletを使用する
+import jakarta.servlet.http.*; // 同上
+import jakarta.servlet.annotation.WebServlet; // web.xmlを使わずannotationを使用する場合に指定
+
+@WebServlet("/")
+public class hello_servlet extends HttpServlet {
+        protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException {
+                PrintWriter resout = response.getWriter();
+                resout.println("Servlet test program.");
+        }
+}
+```
+
+### コンパイル（失敗）
+
+```
+$ javac hello_servlet.java
+```
+
+=> エラーが発生
+
+### コンパイル(classpath付き)
+
+
+```
+$ javac -classpath /usr/local/tomcat/lib/servlet-api.jar hello_servlet.java
+$ ll hello_servlet.class
+```
+
+
+### Tomcatに配置する
+
+webapps/hello/WEB-INF/classes ディレクトリの作成
+
+```
+$ mkdir -p /app/webapps/hello/WEB-INF/classes
+$ mv hello_servlet.class /app/webapps/hello/WEB-INF/classes
+```
+
+=> http://localhost:8888/hello/ の表示を確認
+
+動かない時「webappsディレクトリにあるhelloディレクトリをhogeなどに変更
+
+例）hogeにした場合は
+
+=> http://localhost:8888/hoge/ の表示を確認
+
+
+## ライブラリのダウンロード
+
+※ 事前実行済
 
 pom.xmlの作成
 
@@ -34,28 +124,75 @@ $ mvn dependency:copy-dependencies
 => target/dependencyにファイルが入る
 
 $ ls ./target/dependency
-mysql-connector-j-8.0.31.jar
-jackson-core-2.13.4.jar
 ```
 
-### DBの結合確認
+## MySQLに接続出来るかを確認する
+
+### 確認のためのdbtest.javaを作成する
+
+- doc/src/dbtest.java.txtをsrc/dbtest.javaに設置
 
 ```
-javac -d bin dbtest.java
-java -classpath "./bin:./target/dependency/mysql-connector-j-8.0.31.jar" dbtest
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+ 
+public class dbtest {
+	public static void main(String[] args) {
+		...
+		// データベース接続
+		conn = DriverManager.getConnection(
+				// ホスト名、データベース名
+				"jdbc:mysql://mysql:3306/study",
+				// ユーザー名
+				"system",
+				// パスワード
+				"system");
+	}
+}
 ```
 
-### JSONを利用して読み込みを行う
-
-ライブラリが増えて来るのでワイルドカード指定
+### コンパイル&実行
 
 ```
+# コンパイル
+$ javac -d bin dbtest.java
+
+# 実行
+$ java -classpath "./bin:./target/dependency/mysql-connector-j-8.0.31.jar" dbtest
+```
+
+
+## ダミーデーターを取り込む
+
+### 確認のためのdbtest.javaを作成する
+
+- doc/src/insert_db.java.txtをsrc/insert_db.javaに設置
+- insert_dbはJSONの読み込みが必要
+
+必要なjarが増えて大変
+
+1. クラスパスのワイルドカードを利用する
+2. 環境変数CLASSPATHを使う
+
+### コンパイル&実行
+
+```
+# 環境変数の設定
 export CLASSPATH=.:./bin/./target/dependency/*
+
+# コンパイル
 javac -d bin insert_db.java
+
+# 実行
 java insert_db
 ```
 
-### VSCodeにJavaの情報を追加する
+## IDEを使わないとエラー表示になる
+
+VSCodeを使ってJavaのビルドが出来るようにする
 
 - Extension Pack for Java
 - 設定「java.project.referencedLibraries」
@@ -66,7 +203,9 @@ java insert_db
 }
 ```
 
-### シンプルなJSONを返却するServlet
+## シンプルなJSONを返却するServlet
+
+- src/api_list01.txtをsrc/api_list.javaに配置
 
 ```
 export CLASSPATH=.:./bin/./target/dependency/*:/usr/local/tomcat/lib/*
@@ -174,9 +313,3 @@ response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 ```
 
 => 動作確認
-
-### リファクタリング
-
-- データーベースの接続方法
-	- 現在の接続はメモリリークを伴う
-	- META-INF/context.xml

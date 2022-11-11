@@ -1,0 +1,89 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.io.IOException;
+//Jackson
+import java.nio.file.Paths;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+ 
+public class insert_db {
+    public static void main(String[] args) {
+
+		JsonNode json = null;
+
+		try {
+			//JSONの読み込み
+			ObjectMapper  objectMapper = new ObjectMapper();
+			json = objectMapper.readTree(Paths.get("./dummy_customer.json").toFile());
+		}catch(JsonParseException e){
+			e.printStackTrace();
+			System.out.println("JSONのパース失敗");
+		}catch(IOException e){
+			e.printStackTrace();
+			System.out.println("IOエラー");
+		}
+		
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        
+        try {
+            // データベース接続
+            conn = DriverManager.getConnection(
+                    // ホスト名、データベース名
+                    "jdbc:mysql://mysql:3306/study",
+                    // ユーザー名
+                    "system",
+                    // パスワード
+                    "system");
+ 
+            // SQL文をセット
+            stmt = conn.prepareStatement(
+				"insert into customer_info" + 
+				"(name, birthday, gender, blood, mailaddress, tel, mobile, post, address, company, card, myno)" + 
+				"values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+				
+			for (final JsonNode objNode : json) {
+				try {
+
+					System.out.println(objNode.get("name").asText());
+
+					stmt.setString(1, objNode.get("name").asText());
+					stmt.setString(2, objNode.get("birthday").asText());
+					stmt.setString(3, objNode.get("gender").asText());
+					stmt.setString(4, objNode.get("blood").asText());
+					stmt.setString(5, objNode.get("mailaddress").asText());
+					stmt.setString(6, objNode.get("tel").asText());
+					stmt.setString(7, objNode.get("mobile").asText());
+					stmt.setString(8, objNode.get("post").asText());
+					stmt.setString(9, objNode.get("address").asText());
+					stmt.setString(10, objNode.get("company").asText());
+					stmt.setString(11, objNode.get("card").asText());
+					stmt.setString(12, objNode.get("myno").asText());
+					stmt.executeUpdate();
+					
+				} catch (Exception e) {
+					
+				}
+				
+			}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("データベース接続エラー。");
+            }
+        }
+    }
+}

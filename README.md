@@ -12,15 +12,15 @@ http://localhost:8888/helloworld/
 を開いて表示を確認する
 
 
-## Maven 新規プロジェクト
+## ステップ1
 
-### 1. dockerコンテナに入る
+### dockerコンテナに入る
 
 ```
-$ docker compose exec java /bin/bash
+$ docker compose exec tomcat /bin/bash
 ```
 
-### 2. mvnを利用してプロジェクトの作成
+### mvnを利用してプロジェクトの作成
 
 ```
 $ mvn archetype:generate -DarchetypeArtifactId=maven-archetype-webapp

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -e /app/webapps/api_test ]; then
+	rm -rf /app/webapps/api_test
+	sleep 10
+fi
+
+if [ -e /app/src/bin/api_test ]; then
+	rm -rf /app/src/bin/api_test
+	sleep 10
+fi
+
+export CLASSPATH=.:./bin/:./target/dependency/*:/usr/local/tomcat/lib/*
+
+# コンパイル実行
+javac -d bin api/*.java
+
+# 作業要フォルダを作成
+mkdir -p bin/api_test/WEB-INF/classes
+mkdir -p bin/api_test/WEB-INF/lib
+
+# classファイルを移動
+cp -rf bin/api bin/api_test/WEB-INF/classes
+
+# jarをコピー
+cp -rf target/dependency/*.jar bin/api_test/WEB-INF/lib
+
+# webappsにデプロイ
+mv bin/api_test /app/webapps

@@ -1,0 +1,13 @@
+import java.io.*;
+import jakarta.servlet.*; // tomcat10以降、javax.servletではなくjakarta.servletを使用する
+import jakarta.servlet.http.*; // 同上
+import jakarta.servlet.annotation.WebServlet; // web.xmlを使わずannotationを使用する場合に指定
+
+@WebServlet("/")
+public class hello_servlet extends HttpServlet {
+        protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException {
+                PrintWriter resout = response.getWriter();
+                resout.println("Servlet test program.");
+        }
+}
+
